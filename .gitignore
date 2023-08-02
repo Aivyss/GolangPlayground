@@ -1,0 +1,6 @@
+# IDE
+.iml
+
+/bin
+/pkg
+/.idea
