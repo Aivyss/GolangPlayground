@@ -7,6 +7,13 @@ type Person struct {
 }
 
 type Student struct {
-	Person
+	Person    // no field name => embedded structure
 	StudentId string
+}
+
+type Worker struct {
+	Person         Person
+	JobDescription string
+	Salary         int
+	Id             string
 }
