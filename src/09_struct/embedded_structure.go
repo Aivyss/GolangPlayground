@@ -1,7 +1,7 @@
 package main
 
 import (
-	"com.playground/src/structures"
+	"com.playground/structures"
 	"fmt"
 	"github.com/google/uuid"
 )
