@@ -12,6 +12,7 @@ func main() {
 	test3()
 	test4()
 	test5()
+	test6()
 }
 
 func test1() {
@@ -111,7 +112,7 @@ func test4() {
 }
 
 func test5() {
-	fmt.Println("====[test1 target: sub field]=====")
+	fmt.Println("====[test5 target: sub field]=====")
 
 	id, _ := uuid.NewUUID()
 	changeValue1 := func(w structures.Worker) {
@@ -144,4 +145,19 @@ func test5() {
 	fmt.Println(worker, "[not changed]")
 	changeValue3(&worker)
 	fmt.Println(worker, "[changed]")
+}
+
+func test6() {
+	fmt.Println("====[test6 target: pointer method]=====")
+
+	itemP := structures.NewItem2("itemA", 1000, true)
+
+	fmt.Println("original id =", itemP.GetId())
+	id, _ := uuid.NewUUID()
+	itemP.ChangeId1(id)
+	fmt.Println(id.String(), "-", itemP.GetId(), "[not changed]")
+
+	id, _ = uuid.NewUUID()
+	itemP.ChangeId2(id)
+	fmt.Println(id.String(), "-", itemP.GetId(), "[changed]")
 }
