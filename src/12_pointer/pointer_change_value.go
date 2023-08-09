@@ -3,6 +3,7 @@ package main
 import (
 	"com.playground/structures"
 	"fmt"
+	"github.com/google/uuid"
 )
 
 func main() {
@@ -10,6 +11,7 @@ func main() {
 	test2()
 	test3()
 	test4()
+	test5()
 }
 
 func test1() {
@@ -106,4 +108,40 @@ func test4() {
 	x := []int{1, 2, 3, 4, 5}
 	add(x)
 	fmt.Println("main x =", x)
+}
+
+func test5() {
+	fmt.Println("====[test1 target: sub field]=====")
+
+	id, _ := uuid.NewUUID()
+	changeValue1 := func(w structures.Worker) {
+		w.Person.Age = 14
+	}
+	changeValue2 := func(w *structures.Worker) {
+		changeValue3 := func(p structures.Person) {
+			p.Age = 14
+		}
+
+		changeValue3(w.Person)
+	}
+	changeValue3 := func(w *structures.Worker) {
+		w.Person.Age = 14
+	}
+
+	worker := structures.Worker{
+		Person: structures.Person{
+			First: "Han",
+			Last:  "Lee",
+			Age:   30,
+		},
+		JobDescription: "Application Engineer",
+		Salary:         10000,
+		Id:             id.String(),
+	}
+	changeValue1(worker)
+	fmt.Println(worker, "[not changed]")
+	changeValue2(&worker)
+	fmt.Println(worker, "[not changed]")
+	changeValue3(&worker)
+	fmt.Println(worker, "[changed]")
 }
