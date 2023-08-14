@@ -4,14 +4,18 @@ import "fmt"
 
 func main() {
 	var strings []string
-	flag := true
-
 	size := 0
 	cnt := 0
+
 	fmt.Print("input size :")
 	_, err := fmt.Scan(&size)
 
-	for flag && cnt < size {
+	if err != nil {
+		fmt.Println("about to exit due to error: ", err.Error())
+		return
+	}
+
+	for cnt < size {
 		cnt += 1
 		var str string
 		fmt.Print("input your value :")
@@ -19,7 +23,7 @@ func main() {
 
 		if err != nil {
 			fmt.Println(err.Error())
-			flag = false
+			cnt -= 1
 		} else {
 			strings = append(strings, str)
 		}
