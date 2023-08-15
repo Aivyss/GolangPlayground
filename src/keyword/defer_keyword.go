@@ -12,6 +12,7 @@ import (
 func main() {
 	defer1()
 	defer2()
+	fmt.Println("deferred return =", defer4())
 	defer3()
 }
 
@@ -53,4 +54,13 @@ func defer3() {
 	defer fmt.Println("defer 3")
 
 	logger.Panicln("panic error happened")
+}
+
+/*
+a deferred function increments the return value after  the surrounding function returns.
+*/
+func defer4() (i int) {
+	defer func() { i += 1 }() // i == 1, 1 += 1 => 2
+
+	return 1
 }
