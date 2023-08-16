@@ -1,14 +1,14 @@
 package main
 
 import (
-	"com.playground/file"
+	"com.playground/snippet/file"
 	"fmt"
 	"io"
 	"strings"
 )
 
 func main() {
-	f, err := file.GetFile("index.html")
+	f, err := file.GetSimpleFile("index.html")
 	if err != nil {
 		fmt.Println(err)
 	}

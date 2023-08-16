@@ -1,6 +1,10 @@
-package snippets
+package slice
 
-func remove[T any](slice []T, index int) []T {
+func DeepCopy[T any](slice []T) []T {
+	return append([]T{}, slice...)
+}
+
+func Remove[T any](slice []T, index int) []T {
 	var result []T
 
 	if len(slice)-1 == index {
@@ -12,8 +16,4 @@ func remove[T any](slice []T, index int) []T {
 	}
 
 	return result
-}
-
-func deepCopy[T any](slice []T) []T {
-	return append([]T{}, slice...)
 }

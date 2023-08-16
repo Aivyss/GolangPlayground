@@ -1,7 +1,7 @@
 package main
 
 import (
-	"com.playground/file"
+	file2 "com.playground/snippet/file"
 	"fmt"
 	"io"
 	"os"
@@ -12,7 +12,7 @@ func main() {
 	fmt.Println(os.Args[0])
 	name := os.Args[1]
 	fileName := os.Args[2]
-	f, err := file.GetFile(fileName)
+	f, err := file2.GetSimpleFile(fileName)
 	if err != nil {
 		fmt.Println(err)
 	}
