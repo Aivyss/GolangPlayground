@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Input Type submit</title>
+</head>
+<body>
+    <h1>Request information</h1>
+    <ul>
+        <li>Method: {{.Method}}</li>
+        <li>Url: {{.Url}}</li>
+        <li>ContentLength: {{.ContentLength}}</li>
+    </ul>
+
+    {{if .Url}}
+        <h2>URL</h2>
+        <div>
+            <ul>
+                <li><strong>Scheme: </strong> <em>{{.Url.Scheme}}</em></li>
+                <li><strong>Opaque: </strong> <em>{{.Url.Opaque}}</em></li>
+                <li><strong>User: </strong> <em>{{.Url.User}}</em></li>
+                <li><strong>Host: </strong> <em>{{.Url.Host}}</em></li>
+                <li><strong>Path: </strong> <em>{{.Url.Path}}</em></li>
+                <li><strong>RawPath: </strong> <em>{{.Url.RawPath}}</em></li>
+                <li><strong>OmitHost: </strong> <em>{{.Url.OmitHost}}</em></li>
+                <li><strong>ForceQuery: </strong> <em>{{.Url.ForceQuery}}</em></li>
+                <li><strong>RawQuery: </strong> <em>{{.Url.RawQuery}}</em></li>
+                <li><strong>Fragment: </strong> <em>{{.Url.Fragment}}</em></li>
+                <li><strong>RawFragment: </strong> <em>{{.Url.RawFragment}}</em></li>
+            </ul>
+        </div>
+    {{end}}
+
+    {{if .Header}}
+        <h2>Headers</h2>
+        <div>
+            <p>
+                <strong>variable names</strong> (identifiers) and <em>values</em>:
+                {{range $key, $value := .Header}}
+                <ul>
+                    {{range $value}}
+                        <li><strong>{{$key}}: </strong> <em>{{.}}</em></li>
+                    {{end}}
+                </ul>
+                {{end}}
+            </p>
+        </div>
+    {{end}}
+    {{if .Submissions1}}
+        <h1>Form Data</h1>
+        <main>
+            <p>
+                <strong>variable names</strong> (identifiers) and <em>values</em>:
+                {{range $key, $value := .Submissions1}}
+                    <p>
+                        <strong>{{$key}}</strong>
+                        <ul>
+                            {{range $value}}
+                                <li><em>{{.}}</em></li>
+                            {{end}}
+                        </ul>
+                    </p>
+                {{end}}
+            </p>
+        </main>
+    {{end}}
+
+    <form action="/?fname=second_name" method="POST">
+        <input type="text" name="fname" placeholder="fname" />
+        <input type="submit" name="submit-btn" value="onda button">
+    </form>
+</body>
+</html>
