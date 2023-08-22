@@ -35,7 +35,7 @@ func (h handler2) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	responseHeader := rw.Header()
 	// Set Method doesn't work after rw.WriteHeader
 	responseHeader.Set("Custom-Key", "My Custom Value")
-	responseHeader.Set("Content-Type", "text/html; charset=ftf-8")
+	responseHeader.Set("Content-Type", "text/html; charset=utf-8")
 	// ExecuteTemplate runs rw.WriteHeader method
 	_ = tpl2.ExecuteTemplate(rw, "methodAndHeader.gohtml", data)
 
