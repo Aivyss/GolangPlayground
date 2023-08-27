@@ -17,15 +17,13 @@ var controller = &AccountController{
 }
 
 func AccountBinding(r *gin.Engine) {
-	r.POST("/signup", controller.Signup)
-	r.POST("/login", controller.Login)
+	r.POST("/signup", WrapHandlerFunc(controller.Signup))
+	r.POST("/login", WrapHandlerFunc(controller.Login))
 }
 
-func (a AccountController) Signup(c *gin.Context) {
-	var signup dto.Signup
-
-	if c.ShouldBind(&signup) == nil {
-		a.accountService.Signup(&signup)
+func (a AccountController) Signup(successBind bool, req *dto.Signup, c *gin.Context) {
+	if successBind {
+		a.accountService.Signup(req)
 
 		c.JSON(http.StatusOK, gin.H{
 			"response": response.Response[bool]{
@@ -45,11 +43,9 @@ func (a AccountController) Signup(c *gin.Context) {
 	}
 }
 
-func (a AccountController) Login(c *gin.Context) {
-	var login dto.Login
-
-	if c.ShouldBind(&login) == nil {
-		account, err := a.accountService.Login(&login)
+func (a AccountController) Login(successBind bool, req *dto.Login, c *gin.Context) {
+	if successBind {
+		account, err := a.accountService.Login(req)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
