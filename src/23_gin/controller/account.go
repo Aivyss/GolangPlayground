@@ -9,9 +9,12 @@ import (
 )
 
 type AccountController struct {
+	accountService *service.AccountService
 }
 
-var controller = &AccountController{}
+var controller = &AccountController{
+	accountService: service.AccountServe(),
+}
 
 func AccountBinding(r *gin.Engine) {
 	r.POST("/signup", controller.Signup)
@@ -22,7 +25,7 @@ func (a AccountController) Signup(c *gin.Context) {
 	var signup dto.Signup
 
 	if c.ShouldBind(&signup) == nil {
-		service.AccountServe().Signup(&signup)
+		a.accountService.Signup(&signup)
 
 		c.JSON(http.StatusOK, gin.H{
 			"response": response.Response[bool]{
@@ -43,10 +46,10 @@ func (a AccountController) Signup(c *gin.Context) {
 }
 
 func (a AccountController) Login(c *gin.Context) {
-	var login dto.LoginDto
+	var login dto.Login
 
 	if c.ShouldBind(&login) == nil {
-		account, err := service.AccountServe().Login(&login)
+		account, err := a.accountService.Login(&login)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{

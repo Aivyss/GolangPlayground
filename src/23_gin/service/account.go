@@ -10,20 +10,26 @@ import (
 var once sync.Once
 var a *AccountService
 
-type AccountService struct{}
+type AccountService struct {
+	accountRepository *repository.AccountRepository
+}
 
 func AccountServe() *AccountService {
-	once.Do(func() { a = &AccountService{} })
+	once.Do(func() {
+		a = &AccountService{
+			accountRepository: repository.AccountRepo(),
+		}
+	})
 
 	return a
 }
 
 func (a AccountService) Signup(signup *dto.Signup) {
-	repository.AccountRepo().Save(signup)
+	a.accountRepository.Save(signup)
 }
 
-func (a AccountService) Login(login *dto.LoginDto) (dto.Account, error) {
-	account, err := repository.AccountRepo().FindByUserId(login.Id)
+func (a AccountService) Login(login *dto.Login) (dto.Account, error) {
+	account, err := a.accountRepository.FindByUserId(login.Id)
 
 	if err != nil {
 		return dto.Account{}, err
