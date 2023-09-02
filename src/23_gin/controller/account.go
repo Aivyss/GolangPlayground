@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"com.playground/23_gin/dto"
-	"com.playground/23_gin/response"
 	"com.playground/23_gin/service"
+	dto2 "com.playground/dto"
+	"com.playground/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -21,7 +21,7 @@ func AccountBinding(r *gin.Engine) {
 	r.POST("/login", WrapHandlerFunc(controller.Login))
 }
 
-func (a AccountController) Signup(successBind bool, req *dto.Signup, c *gin.Context) {
+func (a AccountController) Signup(successBind bool, req *dto2.Signup, c *gin.Context) {
 	if successBind {
 		a.accountService.Signup(req)
 
@@ -43,7 +43,7 @@ func (a AccountController) Signup(successBind bool, req *dto.Signup, c *gin.Cont
 	}
 }
 
-func (a AccountController) Login(successBind bool, req *dto.Login, c *gin.Context) {
+func (a AccountController) Login(successBind bool, req *dto2.Login, c *gin.Context) {
 	if successBind {
 		account, err := a.accountService.Login(req)
 
@@ -57,7 +57,7 @@ func (a AccountController) Login(successBind bool, req *dto.Login, c *gin.Contex
 			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{
-				"response": response.Response[dto.Account]{
+				"response": response.Response[dto2.Account]{
 					Status:  http.StatusOK,
 					Success: true,
 					Data:    account,

@@ -1,8 +1,8 @@
 package service
 
 import (
-	"com.playground/23_gin/dto"
 	"com.playground/23_gin/repository"
+	"com.playground/dto"
 	"errors"
 	"sync"
 )
