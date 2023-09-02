@@ -1,49 +1,55 @@
 package repository
 
 import (
-	dto2 "com.playground/dto"
+	"com.playground/dto"
+	dbPkg "com.playground/sqlx"
+	"com.playground/sqlx/domain"
 	"errors"
 	"fmt"
 )
 
-var memoryPersistence = make(map[string]dto2.AccountDb)
-
 var AccountRepository = struct {
-	Save         func(signup *dto2.Signup) int
-	FindByUserId func(userId string) (dto2.AccountDb, error)
+	Save         func(signup *dto.Signup) int
+	FindByUserId func(userId string) (domain.AccountDb, error)
 }{
-	Save: func(signup *dto2.Signup) int {
+	Save: func(signup *dto.Signup) int {
+		var lastId int64 = -1
 		fmt.Println("=====[Account Save]=====")
 		fmt.Println(signup.Password)
 		fmt.Println(signup.Id)
 		fmt.Println(signup.Name)
-		mapSize := 0
-		_, ok := memoryPersistence[signup.Id]
 
-		if !ok {
-			for range memoryPersistence {
-				mapSize += 1
-			}
+		tx := dbPkg.Db.MustBegin()
+		err := tx.QueryRow(`
+			INSERT INTO ACCOUNT (
+				USER_ID,
+				PASSWORD,
+				USER_NAME
+			) VALUES ($1, $2, $3) RETURNING ACCOUNT_ID
+		`, signup.Id, signup.Password, signup.Name).Scan(&lastId)
 
-			memoryPersistence[signup.Id] = dto2.AccountDb{
-				Id:       mapSize,
-				Name:     signup.Name,
-				Password: signup.Password,
-				UserId:   signup.Id,
-			}
+		if err != nil {
+			_ = tx.Rollback()
+		} else {
+			_ = tx.Commit()
 		}
 
-		return mapSize
+		return int(lastId)
 	},
-	FindByUserId: func(userId string) (dto2.AccountDb, error) {
+	FindByUserId: func(userId string) (domain.AccountDb, error) {
+		result := new(domain.AccountDb)
 		fmt.Println("=====[Account Find]=====")
 		fmt.Println(userId)
-		data, ok := memoryPersistence[userId]
 
-		if ok {
-			return data, nil
+		// select one
+		err := dbPkg.Db.Get(result, `SELECT * FROM ACCOUNT WHERE USER_ID = $1`, userId)
+
+		// select list : dbPkg.Db.Select
+
+		if err == nil {
+			return *result, nil
 		} else {
-			return dto2.AccountDb{}, errors.New("check again your ID or Password")
+			return domain.AccountDb{}, errors.New("check again your ID or Password")
 		}
 	},
 }

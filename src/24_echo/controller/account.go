@@ -3,6 +3,7 @@ package controller
 import (
 	"com.playground/24_echo/service"
 	"com.playground/dto"
+	"com.playground/jwt"
 	"com.playground/response"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -41,6 +42,26 @@ var AccountController = struct {
 					Data:    err.Error(),
 				})
 			} else {
+				// create and set jwts
+				access, refresh, _ := jwt.NewClaimData(account).GenerateTokens()
+				accessTokenCookie := new(http.Cookie)
+				refreshTokenCookie := new(http.Cookie)
+
+				accessTokenCookie.Name = "access"
+				accessTokenCookie.Value = access
+				accessTokenCookie.HttpOnly = true
+				accessTokenCookie.Secure = true
+				refreshTokenCookie.Name = "refresh"
+				refreshTokenCookie.Value = refresh
+				refreshTokenCookie.HttpOnly = true
+				refreshTokenCookie.Secure = true
+
+				// build response
+				c.SetCookie(accessTokenCookie)
+				c.SetCookie(refreshTokenCookie)
+				header := c.Response().Header()
+				header.Set("access", access)
+				header.Set("refresh", refresh)
 				_ = c.JSON(http.StatusOK, response.Response[dto.Account]{
 					Status:  http.StatusOK,
 					Success: true,

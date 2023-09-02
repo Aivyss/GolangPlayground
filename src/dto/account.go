@@ -5,10 +5,3 @@ type Account struct {
 	UserId string `json:"userId"`
 	Name   string `json:"name"`
 }
-
-type AccountDb struct {
-	Id       int
-	UserId   string
-	Name     string
-	Password string
-}

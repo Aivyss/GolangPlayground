@@ -1,7 +1,8 @@
 package repository
 
 import (
-	dto2 "com.playground/dto"
+	"com.playground/dto"
+	"com.playground/sqlx/domain"
 	"errors"
 	"fmt"
 	"sync"
@@ -11,7 +12,7 @@ type AccountRepository struct{}
 
 var once sync.Once
 var a *AccountRepository
-var memoryPersistence = make(map[string]dto2.AccountDb)
+var memoryPersistence = make(map[string]domain.AccountDb)
 
 func AccountRepo() *AccountRepository {
 	once.Do(func() { a = &AccountRepository{} })
@@ -19,7 +20,7 @@ func AccountRepo() *AccountRepository {
 	return a
 }
 
-func (a AccountRepository) Save(signup *dto2.Signup) int {
+func (a AccountRepository) Save(signup *dto.Signup) int {
 	fmt.Println("=====[Account Save]=====")
 	fmt.Println(signup.Password)
 	fmt.Println(signup.Id)
@@ -32,7 +33,7 @@ func (a AccountRepository) Save(signup *dto2.Signup) int {
 			mapSize += 1
 		}
 
-		memoryPersistence[signup.Id] = dto2.AccountDb{
+		memoryPersistence[signup.Id] = domain.AccountDb{
 			Id:       mapSize,
 			Name:     signup.Name,
 			Password: signup.Password,
@@ -43,7 +44,7 @@ func (a AccountRepository) Save(signup *dto2.Signup) int {
 	return mapSize
 }
 
-func (a AccountRepository) FindByUserId(userId string) (dto2.AccountDb, error) {
+func (a AccountRepository) FindByUserId(userId string) (domain.AccountDb, error) {
 	fmt.Println("=====[Account Find]=====")
 	fmt.Println(userId)
 	data, ok := memoryPersistence[userId]
@@ -51,6 +52,6 @@ func (a AccountRepository) FindByUserId(userId string) (dto2.AccountDb, error) {
 	if ok {
 		return data, nil
 	} else {
-		return dto2.AccountDb{}, errors.New("check again your ID or Password")
+		return domain.AccountDb{}, errors.New("check again your ID or Password")
 	}
 }
